@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Interactive Home Page</title>
+  <style>
+    body { font-family: sans-serif; }
+    header { background-color: #222; color: white; text-align: center; padding: 20px; }
+    main { padding: 20px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 onclick="changeTitle()">Welcome to My Site</h1>
+  </header>
+  <main>
+    <p id="msg">Click the heading to change it!</p>
+  </main>
+  <script>
+    function changeTitle() {
+      document.querySelector("h1").innerText = "Title Changed!";
+      document.getElementById("msg").innerText = "Thanks for clicking.";
+    }
+  </script>
+</body>
+</html>

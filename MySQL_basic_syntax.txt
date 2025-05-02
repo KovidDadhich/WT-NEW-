@@ -1,0 +1,309 @@
+**DBMS Detailed Theory Notes**
+
+---
+
+### 1. **Overview and History of DBMS**
+
+- A **Database Management System (DBMS)** is software that stores, manages, and retrieves data efficiently.
+- Early data storage used file systems which were prone to data redundancy, inconsistency, and lacked security.
+- The 1960s saw **hierarchical models**, followed by **network models**.
+- In the 1970s, **E.F. Codd introduced the relational model**, leading to the development of systems like Oracle and IBM DB2.
+- Modern DBMSs support complex data types, large-scale transactions, distributed systems, and integration with programming languages.
+
+---
+
+### 2. **File System vs DBMS**
+
+| Feature | File System | DBMS |
+| --- | --- | --- |
+| Data Redundancy | High | Low |
+| Data Integrity | Poor | Strong |
+| Security | Basic | Advanced |
+| Query Processing | Manual | SQL-based |
+| Concurrency Control | Difficult | Built-in |
+| Backup & Recovery | Manual | Automatic |
+
+---
+
+### 3. **Advantages of DBMS**
+
+- **Data Redundancy Control**
+- **Data Consistency and Integrity**
+- **Data Security and Access Control**
+- **Data Independence**
+- **Efficient Query Processing**
+- **Backup and Recovery**
+- **Concurrent Access**
+
+---
+
+### 4. **Describing and Storing Data in DBMS**
+
+- **Schema**: Description of the structure of the database.
+- **Instance**: The data in the database at a specific moment.
+- **Metadata**: Data about data (data types, constraints, table structure).
+- **Catalog/System Catalog**: Stores metadata used by DBMS.
+
+---
+
+### 5. **Queries in DBMS**
+
+- **SQL (Structured Query Language)**: Used for managing data.
+- Includes:
+    - **DDL** (Data Definition Language): CREATE, DROP, ALTER, TRUNCATE
+    - **DML** (Data Manipulation Language): INSERT, UPDATE, DELETE
+    - **DQL** (Data Query Language): SELECT
+    - **DCL** (Data Control Language): GRANT, REVOKE
+    - **TCL** (Transaction Control Language): COMMIT, ROLLBACK, SAVEPOINT
+
+### **DDL (Data Definition Language) Syntax**
+
+1. **CREATE**
+
+```sql
+CREATE TABLE table_name (
+    column1 datatype [constraint],
+    column2 datatype [constraint],
+    ...
+);
+CREATE DATABASE database_name;
+
+```
+
+1. **ALTER**
+
+```sql
+ALTER TABLE table_name ADD column_name datatype;
+ALTER TABLE table_name MODIFY column_name datatype;
+ALTER TABLE table_name DROP COLUMN column_name;
+
+```
+
+1. **DROP**
+
+```sql
+DROP TABLE table_name;
+DROP DATABASE database_name;
+
+```
+
+1. **TRUNCATE**
+
+```sql
+TRUNCATE TABLE table_name;
+
+```
+
+### **DML (Data Manipulation Language) Syntax**
+
+1. **INSERT**
+
+```sql
+INSERT INTO table_name (column1, column2, ...) VALUES (value1, value2, ...);
+INSERT INTO table_name VALUES (value1, value2, ...);
+
+```
+
+1. **UPDATE**
+
+```sql
+UPDATE table_name
+SET column1 = value1, column2 = value2, ...
+WHERE condition;
+
+```
+
+1. **DELETE**
+
+```sql
+DELETE FROM table_name WHERE condition;
+DELETE FROM table_name;  -- deletes all rows
+
+```
+
+### **DQL (Data Query Language) Syntax**
+
+1. **SELECT**
+
+```sql
+SELECT column1, column2 FROM table_name WHERE condition;
+SELECT * FROM table_name;
+SELECT DISTINCT column_name FROM table_name;
+
+```
+
+### **DCL (Data Control Language) Syntax**
+
+1. **GRANT**
+
+```sql
+GRANT privilege_type ON database_name.table_name TO 'username'@'host';
+
+```
+
+1. **REVOKE**
+
+```sql
+REVOKE privilege_type ON database_name.table_name FROM 'username'@'host';
+
+```
+
+### **TCL (Transaction Control Language) Syntax**
+
+1. **COMMIT**
+
+```sql
+COMMIT;  -- permanently saves changes made in the transaction
+
+```
+
+1. **ROLLBACK**
+
+```sql
+ROLLBACK;  -- undoes changes since last commit
+
+```
+
+1. **SAVEPOINT**
+
+```sql
+SAVEPOINT savepoint_name;
+ROLLBACK TO savepoint_name;
+RELEASE SAVEPOINT savepoint_name;
+
+```
+
+---
+
+### 6. **Structure of a DBMS**
+
+- **Query Processor**: Interprets SQL queries
+- **Storage Manager**: Manages disk storage
+- **Buffer Manager**: Controls buffer memory
+- **Transaction Manager**: Ensures ACID properties
+- **Metadata Manager**: Handles system catalog
+
+---
+
+### 7. **Types of Databases**
+
+- **Relational** (RDBMS)
+- **Hierarchical**
+- **Network**
+- **Object-oriented**
+- **NoSQL** (Document, Key-Value, Graph)
+- **Distributed**
+- **Cloud Databases**
+
+---
+
+### 8. **Entity Relationship (ER) Model**
+
+- **Entity**: Real-world object (e.g., Student)
+- **Attributes**: Properties (e.g., Name, Age)
+- **Relationship**: Association between entities (e.g., Enrolled)
+- **Constraints**:
+    - **Mapping Cardinalities**: 1:1, 1:N, M:N
+    - **Participation Constraints**: Total/Partial
+- **Generalization**: Grouping similar entities
+- **Specialization**: Subdividing an entity
+- **Aggregation**: Relationship as an entity
+
+---
+
+### 9. **Data Design with ER Model**
+
+- Identify entities and attributes
+- Define primary keys
+- Identify relationships and constraints
+- Normalize ER diagram to reduce redundancy
+- Convert to relational schema
+
+---
+
+### 10. **Relational Algebra and Tuple Calculus**
+
+**Relational Algebra Operators:**
+
+- **Selection (σ)**: Filters rows
+- **Projection (π)**: Selects columns
+- **Union (∪)**, **Intersection (∩)**, **Difference (−)**
+- **Cartesian Product (×)**: All combinations
+- **Join (⋈)**: Combines related rows
+- **Division**: Matches pairs from one relation to all entries of another
+- **Renaming (ρ)**: Renames relations or attributes
+
+**Tuple Relational Calculus:**
+
+- Declarative language using logic and predicates.
+- Syntax: { t | P(t) } where P is a predicate.
+
+**Expressive Power**: Algebra and Calculus are equally powerful.
+
+---
+
+### 11. **Structured Query Language (SQL)**
+
+**Set Operators**:
+
+- **UNION**: Combines distinct rows
+- **INTERSECT**: Rows common to both
+- **EXCEPT**: Rows in first but not in second
+
+**Nested Queries**:
+
+- Query within a query
+- Can use **IN**, **ANY**, **ALL**
+
+**Aggregate Functions**:
+
+- COUNT, AVG, MIN, MAX, SUM
+
+**Null Values**:
+
+- Use **IS NULL**, **IS NOT NULL**
+
+**Join Queries**:
+
+- **INNER JOIN**, **LEFT JOIN**, **RIGHT JOIN**, **FULL JOIN**
+
+**Group & Order Clauses**:
+
+- **GROUP BY** for aggregation
+- **ORDER BY** for sorting results
+
+**Key Constraints**:
+
+- **Primary Key**: Unique and not null
+- **Foreign Key**: Refers to primary key of another table
+
+**Views**:
+
+- Virtual tables from queries
+
+**Triggers**:
+
+- Procedures that run automatically on insert/update/delete events
+
+---
+
+### 12. **Introduction to Connectors & Accessing DB in Python**
+
+- Python module: `mysql.connector`
+
+```python
+import mysql.connector
+conn = mysql.connector.connect(user='root', password='pass', host='localhost', database='school')
+cursor = conn.cursor()
+cursor.execute("SELECT * FROM Students")
+for row in cursor:
+    print(row)
+conn.close()
+
+```
+
+- Enables application integration with MySQL DBs.
+
+---
+
+This covers your entire syllabus in theory. You can revise this before your practical exam and use it for viva preparation as well.

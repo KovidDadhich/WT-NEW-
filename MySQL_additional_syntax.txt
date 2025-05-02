@@ -1,0 +1,457 @@
+---
+
+### 🔁 Rename Table / Column
+
+**1. Rename Table (without ALTER)**
+
+```sql
+RENAME TABLE old_table_name TO new_table_name;
+
+```
+
+**2. Rename Table using ALTER**
+
+```sql
+ALTER TABLE old_table_name RENAME TO new_table_name;
+
+```
+
+**3. Rename Column**
+
+```sql
+ALTER TABLE table_name RENAME COLUMN old_column TO new_column;
+
+```
+
+---
+
+### 🏷️ Aliasing
+
+**1. Column Alias**
+
+```sql
+SELECT column_name AS alias_name FROM table_name;
+SELECT name AS student_name FROM Students;
+
+```
+
+**2. Table Alias**
+
+```sql
+SELECT s.name FROM Students AS s;
+SELECT s.name, d.name FROM Students s JOIN Departments d ON s.dept_id = d.id;
+
+```
+
+---
+
+### 📊 ORDER BY Clause
+
+```sql
+SELECT * FROM table_name ORDER BY column_name [ASC|DESC];
+SELECT name, marks FROM Students ORDER BY marks DESC;
+
+```
+
+- **ASC**: Ascending (default)
+- **DESC**: Descending
+
+---
+
+### 🔍 Pattern Matching
+
+**1. LIKE Operator**
+
+```sql
+SELECT * FROM Students WHERE name LIKE 'A%';   -- starts with A
+SELECT * FROM Students WHERE name LIKE '%n';   -- ends with n
+SELECT * FROM Students WHERE name LIKE '_a%';  -- second letter is 'a'
+
+```
+
+**2. REGEXP (Regular Expressions)**
+
+```sql
+SELECT * FROM Students WHERE name REGEXP '^A';  -- starts with A
+SELECT * FROM Students WHERE name REGEXP 'on$'; -- ends with 'on'
+SELECT * FROM Students WHERE name REGEXP '[aeiou]'; -- contains vowels
+
+```
+
+---
+
+### ➕ Set Operations (combine multiple result sets)
+
+**1. UNION (removes duplicates)**
+
+```sql
+SELECT name FROM Students
+UNION
+SELECT name FROM Alumni;
+
+```
+
+**2. UNION ALL (includes duplicates)**
+
+```sql
+SELECT name FROM Students
+UNION ALL
+SELECT name FROM Alumni;
+
+```
+
+**3. INTERSECT (not directly supported in MySQL, use JOIN instead)**
+
+```sql
+SELECT name FROM Students
+WHERE name IN (SELECT name FROM Alumni);
+
+```
+
+**4. EXCEPT (not directly supported in MySQL, use NOT IN)**
+
+```sql
+SELECT name FROM Students
+WHERE name NOT IN (SELECT name FROM Alumni);
+
+```
+
+---
+
+### 🔗 Joins in SQL
+
+**1. INNER JOIN** (only matching rows)
+
+```sql
+SELECT s.name, d.name
+FROM Students s
+INNER JOIN Departments d ON s.dept_id = d.id;
+
+```
+
+**2. LEFT OUTER JOIN** (all from left + matching from right)
+
+```sql
+SELECT s.name, d.name
+FROM Students s
+LEFT JOIN Departments d ON s.dept_id = d.id;
+
+```
+
+**3. RIGHT OUTER JOIN** (all from right + matching from left)
+
+```sql
+SELECT s.name, d.name
+FROM Students s
+RIGHT JOIN Departments d ON s.dept_id = d.id;
+
+```
+
+**4. FULL OUTER JOIN** (not directly supported in MySQL; use UNION)
+
+```sql
+SELECT s.name, d.name
+FROM Students s LEFT JOIN Departments d ON s.dept_id = d.id
+UNION
+SELECT s.name, d.name
+FROM Students s RIGHT JOIN Departments d ON s.dept_id = d.id;
+
+```
+
+---
+
+### 📌 Constraints
+
+**1. CHECK Constraint**
+
+```sql
+CREATE TABLE Students (
+    id INT,
+    age INT CHECK (age >= 18)
+);
+
+```
+
+**2. FOREIGN KEY Constraint**
+
+```sql
+CREATE TABLE Students (
+    id INT,
+    dept_id INT,
+    FOREIGN KEY (dept_id) REFERENCES Departments(id)
+);
+
+```
+
+---
+
+### 👁️ Views
+
+**1. Create a View**
+
+```sql
+CREATE VIEW view_name AS
+SELECT column1, column2 FROM table_name WHERE condition;
+
+```
+
+**2. Update a View**
+
+```sql
+CREATE OR REPLACE VIEW view_name AS
+SELECT ... FROM ...;
+
+```
+
+**3. Drop a View**
+
+```sql
+DROP VIEW view_name;
+
+```
+
+---
+
+### 🔁 Nested / Subqueries
+
+**1. Simple Subquery (in WHERE clause)**
+
+```sql
+SELECT name FROM Students
+WHERE dept_id = (SELECT id FROM Departments WHERE name = 'CSE');
+
+```
+
+**2. IN and NOT IN**
+
+```sql
+SELECT name FROM Students WHERE dept_id IN (SELECT id FROM Departments WHERE name = 'CSE');
+SELECT name FROM Students WHERE dept_id NOT IN (SELECT id FROM Departments WHERE name = 'CSE');
+
+```
+
+**3. Co-related Subquery (uses outer query)**
+
+```sql
+SELECT name FROM Students s
+WHERE EXISTS (
+    SELECT * FROM Enrollments e
+    WHERE e.student_id = s.id AND e.grade = 'A'
+);
+
+```
+
+**4. NOT EXISTS**
+
+```sql
+SELECT name FROM Students s
+WHERE NOT EXISTS (
+    SELECT * FROM Enrollments e WHERE e.student_id = s.id
+);
+
+```
+
+---
+
+### 🔧 Procedures and Functions
+
+**1. Stored Procedure**
+
+```sql
+DELIMITER //
+CREATE PROCEDURE GetStudents()
+BEGIN
+    SELECT * FROM Students;
+END //
+DELIMITER ;
+
+CALL GetStudents();
+
+```
+
+**2. Stored Function**
+
+```sql
+DELIMITER //
+CREATE FUNCTION GetTotalStudents() RETURNS INT
+BEGIN
+    DECLARE total INT;
+    SELECT COUNT(*) INTO total FROM Students;
+    RETURN total;
+END //
+DELIMITER ;
+
+SELECT GetTotalStudents();
+```
+
+---
+
+---
+
+### 🔢 COUNT(*) Function
+
+**Used to count the number of rows in a table (including NULL values).**
+
+```sql
+SELECT COUNT(*) FROM table_name;
+SELECT COUNT(column_name) FROM table_name; -- Ignores NULLs
+SELECT COUNT(DISTINCT column_name) FROM table_name; -- Counts unique non-NULL values
+
+```
+
+---
+
+### 🚨 Triggers
+
+**A trigger is a set of SQL statements that automatically executes in response to certain events on a particular table.**
+
+**Syntax to Create a Trigger:**
+
+```sql
+DELIMITER //
+CREATE TRIGGER trigger_name
+{BEFORE | AFTER} {INSERT | UPDATE | DELETE}
+ON table_name
+FOR EACH ROW
+BEGIN
+    -- SQL statements
+END;//
+DELIMITER ;
+
+```
+
+**Example: Log INSERT into Students table:**
+
+```sql
+DELIMITER //
+CREATE TRIGGER log_student_insert
+AFTER INSERT ON Students
+FOR EACH ROW
+BEGIN
+    INSERT INTO StudentLog(student_id, action)
+    VALUES (NEW.id, 'Inserted');
+END;//
+DELIMITER ;
+
+```
+
+- `NEW` refers to the new row being inserted.
+- `OLD` refers to the existing row being updated or deleted.
+
+**Dropping a Trigger:**
+
+```sql
+DROP TRIGGER trigger_name;
+
+```
+
+---
+
+---
+
+### ➕ SUM() Function
+
+**Used to return the total sum of a numeric column. Ignores NULL values.**
+
+```sql
+SELECT SUM(column_name) FROM table_name;
+
+```
+
+**Examples:**
+
+```sql
+SELECT SUM(salary) FROM Employees; -- Total salary of all employees
+SELECT department_id, SUM(salary) FROM Employees GROUP BY department_id; -- Total salary per department
+
+```
+
+---
+
+### 📉 AVG(), MIN(), MAX() Functions
+
+**1. AVG() – Returns the average of a numeric column**
+
+```sql
+SELECT AVG(column_name) FROM table_name;
+
+```
+
+**Example:**
+
+```sql
+SELECT AVG(marks) FROM Students;
+
+```
+
+**2. MIN() – Returns the minimum value in a column**
+
+```sql
+SELECT MIN(column_name) FROM table_name;
+
+```
+
+**Example:**
+
+```sql
+SELECT MIN(salary) FROM Employees;
+
+```
+
+**3. MAX() – Returns the maximum value in a column**
+
+```sql
+SELECT MAX(column_name) FROM table_name;
+
+```
+
+**Example:**
+
+```sql
+SELECT MAX(salary) FROM Employees;
+
+```
+
+---
+
+### 📊 GROUP BY and HAVING Clauses
+
+**GROUP BY** is used to arrange identical data into groups. Often used with aggregate functions.
+
+```sql
+SELECT column_name, AGGREGATE_FUNCTION(column_name)
+FROM table_name
+GROUP BY column_name;
+
+```
+
+**Example:**
+
+```sql
+SELECT department_id, AVG(salary)
+FROM Employees
+GROUP BY department_id;
+
+```
+
+**HAVING** is used to filter groups after the `GROUP BY` clause (like `WHERE` but for groups).
+
+```sql
+SELECT column_name, AGGREGATE_FUNCTION(column_name)
+FROM table_name
+GROUP BY column_name
+HAVING AGGREGATE_FUNCTION(column_name) condition;
+
+```
+
+**Example:**
+
+```sql
+SELECT department_id, COUNT(*)
+FROM Employees
+GROUP BY department_id
+HAVING COUNT(*) > 5;
+
+```
+
+---
